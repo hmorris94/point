@@ -39,8 +39,8 @@ class NexStar(object):
     # the terminating '#' character. The response received from the hand
     # controller is validated and returned, excluding the termination character.
     def _send_command(self, command, response_len = 0):
-        self.serial.write(command)
-        response = self.serial.read(response_len + 1)
+        self.serial.write(command.encode())
+        response = self.serial.read(response_len + 1).decode()
         assert response[-1] == '#', 'Command failed'
         return response[0:-1]
 
