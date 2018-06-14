@@ -1,5 +1,4 @@
 import serial
-import io
 import datetime
 import time
 import calendar
@@ -32,6 +31,7 @@ class NexStar(object):
         self.cancel_goto()
         self.slew_fixed('az', 0)
         self.slew_fixed('alt', 0)
+        self.serial.close()
 
     # Send a command to the hand controller and get a response. The command
     # argument gives the ASCII command to send. The response_len is an integer
@@ -39,9 +39,17 @@ class NexStar(object):
     # the terminating '#' character. The response received from the hand
     # controller is validated and returned, excluding the termination character.
     def _send_command(self, command, response_len = 0):
+        # Throw away anything still in read buffer
+        if self.serial.in_waiting > 0:
+            self.serial.read(self.serial.in_waiting)
+
         self.serial.write(command.encode())
         response = self.serial.read(response_len + 1).decode()
-        assert response[-1] == '#', 'Command failed'
+        if response[-1] != '#':
+            # Telescope is almost definitely still squawking... will clear
+            # buffer when the next command is sent
+            print("Unexpected response from telescope.")
+        # assert response[-1] == '#', 'Command failed'
         return response[0:-1]
 
     # Helper function to convert precise angular values in command responses
