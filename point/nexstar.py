@@ -143,6 +143,11 @@ class NexStar(object):
                   + chr(0))
         self._send_command(command)
 
+    # Convenience function that sets both az and alt variable slewing
+    def slew_var_azalt(self, az, alt):
+        self.slew_var('az', az)
+        self.slew_var('alt', alt)
+
     # Fixed-rate slew command. Fixed-rate means that only the nine
     # rates supported on the hand controller are available. The axis argument
     # may be set to 'az' or 'alt'. Rate is an integer from -9 to +9,
@@ -157,6 +162,11 @@ class NexStar(object):
         command = ('P' + chr(2) + axis_char + sign_char + rate_char
                    + chr(0) + chr(0) + chr(0))
         self._send_command(command)
+
+    # Convenience function that sets both az and alt fixed slewing
+    def slew_fixed_azalt(self, az, alt):
+        self.slew_fixed('az', az)
+        self.slew_fixed('alt', alt)
 
     # Returns the location of the telescope as a tuple of (latitude,
     # longitude) in signed degrees format.
