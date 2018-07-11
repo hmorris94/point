@@ -134,7 +134,7 @@ class NexStar(object):
     def slew_var(self, axis, rate):
         assert axis in ['az', 'alt']
         negative_rate = True if rate < 0 else False
-        track_rate_high = (int(abs(rate)) * 4) / 256
+        track_rate_high = int((int(abs(rate)) * 4) / 256)
         track_rate_low = (int(abs(rate)) * 4) % 256
         axis_char = chr(16) if axis == 'az' else chr(17)
         sign_char = chr(7) if negative_rate == True else chr(6)
